@@ -1,56 +1,55 @@
 name: CI Pipeline
 
-on:
+on: 
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
+
+      - name: Build application
+        run: npm run build
 
   test:
     runs-on: ubuntu-latest
     needs: build
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Run Tests
+      - name: Run tests
         run: npm test
 
-  upload:
+  deploy:
     runs-on: ubuntu-latest
     needs: test
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Archive Project Artifacts
-        run: zip -r project.zip . 
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: project-artifact
-          path: project.zip
+      - name: Checkout repository
+     
