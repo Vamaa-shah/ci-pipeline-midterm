@@ -21,7 +21,7 @@ jobs:
     - name: Install Dependencies
       run: |
         npm install
-        chmod +x ./node_modules/.bin/jest  # Add Jest permissions fix
+        chmod +x ./node_modules/.bin/jest
 
     - name: Run Tests
       run: npm test
@@ -31,7 +31,7 @@ jobs:
       if: success() && github.ref == 'refs/heads/main'
       uses: docker/login-action@v2
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        username: vamashah11
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Set up Docker Buildx
@@ -44,4 +44,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest
+        tags: vamashah11/node-app:latest
