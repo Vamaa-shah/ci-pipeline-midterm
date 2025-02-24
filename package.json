@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Midterm Practical - CI Pipeline with GitHub Actions",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "test": "npx jest"
-  },
+  
+    "scripts": {
+      "test": "jest --forceExit"
+    }
+  
+  ,
   "dependencies": {
     "express": "^4.18.2"
   },
