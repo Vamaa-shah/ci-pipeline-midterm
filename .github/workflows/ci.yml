@@ -1,6 +1,6 @@
 name: CI Pipeline
 
-on: 
+on:
   push:
     branches:
       - main
@@ -13,43 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install
 
-      - name: Build application
-        run: npm run build
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
+      - name: Run Tests
         run: npm test
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout repository
-     
+      - name: Start Application
+        run: node src/index.js
