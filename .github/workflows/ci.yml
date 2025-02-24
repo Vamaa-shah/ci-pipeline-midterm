@@ -2,46 +2,42 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ development ]
   pull_request:
-    branches: [ main ]
+    branches: [ development ]
 
 jobs:
-  test-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        node-version: '16'
+        python-version: '3.9'
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: |
-        npm install
-        chmod +x ./node_modules/.bin/jest
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-    - name: Run Tests
-      run: npm test
+    - name: Run tests
+      run: |
+        pytest
 
-    # Only run Docker steps if tests pass and we're on main branch
     - name: Login to Docker Hub
-      if: success() && github.ref == 'refs/heads/main'
-      uses: docker/login-action@v2
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: docker/login-action@v1
       with:
-        username: vamashah11
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-    - name: Set up Docker Buildx
-      if: success() && github.ref == 'refs/heads/main'
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build and Push Docker image
-      if: success() && github.ref == 'refs/heads/main'
-      uses: docker/build-push-action@v4
+    - name: Build and push Docker image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/development'
+      uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: vamashah11/node-app:latest
+        tags: iiprofit/calculator-api:latest 
